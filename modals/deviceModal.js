@@ -13,7 +13,6 @@ const DeviceSchema = mongoose.Schema(
         },
         device_local_ip: {
             type: String,
-            required: true,
         },
         token: {
             type: String,
@@ -24,7 +23,7 @@ const DeviceSchema = mongoose.Schema(
         state: {
             type: Number,
             enum: [0, 1], // 0 - Not Used and 1 - In Use 
-            required: true,
+            default: 0,
         }
     },
     { timestamps: true }
