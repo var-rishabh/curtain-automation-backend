@@ -4,11 +4,13 @@ const DeviceAccessSchema = mongoose.Schema(
     {
         device_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Device'
+            ref: 'Device',
+            required: true,
         },
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: true,
         },
         deleted: {
             type: Boolean,
