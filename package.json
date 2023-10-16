@@ -1,0 +1,31 @@
+{
+  "name": "curtain-automation-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/var-rishabh/curtain-automation-backend.git"
+  },
+  "author": "Rishabh Varshney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/var-rishabh/curtain-automation-backend/issues"
+  },
+  "homepage": "https://github.com/var-rishabh/curtain-automation-backend#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.6.2",
+    "nodemon": "^3.0.1"
+  }
+}
