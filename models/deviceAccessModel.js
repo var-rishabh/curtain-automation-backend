@@ -12,6 +12,11 @@ const DeviceAccessSchema = mongoose.Schema(
             ref: 'User',
             required: true,
         },
+        type: {
+            type: Number,
+            enum: [0, 1], // 0 - owner and 1 - shared 
+            default: 1,
+        },
         deleted: {
             type: Boolean,
             default: false,

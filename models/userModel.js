@@ -28,11 +28,6 @@ const UserSchema = mongoose.Schema(
             minLength: 8,
             select: false,
         },
-        user_id: {
-            type: String,
-            unique: true,
-            required: true,
-        },
         type: {
             type: Number,
             enum: [0, 1], // 0 - Admin and 1 - User 
