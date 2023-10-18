@@ -14,8 +14,8 @@ dotenv.config();
 const connectMongoDB = require("./config/db");
 connectMongoDB();
 
-// const userRoutes = require("./routes/userRoutes");
-// const deviceRoutes = require("./routes/deviceRoutes");
+const userRoutes = require("./routes/userRoutes");
+const deviceRoutes = require("./routes/deviceRoutes");
 
 app.get("/", async (req, res) => {
     try {
@@ -33,8 +33,8 @@ app.get("/", async (req, res) => {
     }
 });
 
-// app.use("/user", userRoutes);
-// app.use("/device", deviceRoutes);
+app.use("/user", userRoutes);
+app.use("/device", deviceRoutes);
 
 app.listen(process.env.PORT, (err) => {
     if (err) {
