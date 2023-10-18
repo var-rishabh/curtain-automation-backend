@@ -1,4 +1,3 @@
-const voucher_codes = require('voucher-code-generator');
 const userServices = require("../services/userServices");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
@@ -63,14 +62,6 @@ module.exports.signUp = async (req, res) => {
             });
         }
 
-        const coup = voucher_codes.generate({
-            length: 8,
-            count: 1,
-            prefix: "USER",
-            pattern: "-########",
-        });
-        userData["user_id"] = coup[0];
-
         const newUser = await userServices.createUser(userData);
         if (newUser["status"] !== 1) {
             return res.status(422).json({
@@ -96,7 +87,7 @@ module.exports.signUp = async (req, res) => {
 // controller to get user details
 module.exports.getUser = async (req, res) => {
     try {
-        const userId = req.params.userId; 
+        const userId = req.user._id; 
         const getUser = await userServices.findUserById(userId);
         if (getUser["status"] === 1) {
             return res.status(200).json({

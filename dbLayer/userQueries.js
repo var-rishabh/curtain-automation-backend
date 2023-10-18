@@ -35,7 +35,6 @@ module.exports.createUser = async (userData) => {
             },
             email: userData.email,
             password: userData.password,
-            user_id: userData.user_id,
         });
         await newUser.save();
         response["status"] = 1;
