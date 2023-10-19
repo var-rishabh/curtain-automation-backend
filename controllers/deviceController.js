@@ -168,15 +168,6 @@ module.exports.updateDevice = async (req, res) => {
             });
         }
 
-        const deviceOwner = await deviceServices.checkDeviceOwner(getDevice["data"]["_id"], req.user._id);
-        if (deviceOwner["status"] !== 1) {
-            return res.status(409).json({
-                status: "failure",
-                message: "You Are Not The Device Owner.",
-                data: null,
-            });
-        }
-
         const deviceData = {
             device_name: device_name ? device_name : getDevice["data"]["device_name"],
             device_local_ip: device_local_ip ? device_local_ip : getDevice["data"]["device_local_ip"],
