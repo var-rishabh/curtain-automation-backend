@@ -18,7 +18,7 @@ module.exports.findDevicesByUserId = async (userId) => {
 module.exports.findDeviceByDeviceId = async (deviceId) => {
     let response = { status: 0, msg: "", data: null };
     try {
-        const getDevice = await Device.findOne({ _id: deviceId });
+        const getDevice = await Device.findOne({ device_id: deviceId });
         if (getDevice) {
             response["status"] = 1;
             response["msg"] = "Device Found";
