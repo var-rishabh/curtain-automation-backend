@@ -255,3 +255,47 @@ module.exports.shareDeviceAccess = async (req, res) => {
         });
     }
 };
+
+// controller to delete device
+module.exports.deleteDevice = async (req, res) => {
+    try {
+        const { device_id } = req.body;
+        const getDevice = await deviceServices.findDeviceByDeviceId(device_id);
+        if (getDevice["status"] !== 1) {
+            return res.status(404).json({
+                status: "failure",
+                message: "Device Not Found.",
+                data: null,
+            });
+        }
+
+        const deviceOwner = await deviceServices.checkDeviceOwner(getDevice["data"]["_id"], req.user._id);
+        if (deviceOwner["status"] !== 1) {
+            return res.status(409).json({
+                status: "failure",
+                message: "You Are Not The Device Owner.",
+                data: null,
+            });
+        }
+
+        const deleteDevice = await deviceServices.deleteDevice(getDevice["data"]["_id"]);
+        if (deleteDevice["status"] === 1) {
+            return res.status(200).json({
+                status: "success",
+                message: deleteDevice["msg"],
+                data: deleteDevice["data"],
+            });
+        } else {
+            return res.status(409).json({
+                status: "failure",
+                message: deleteDevice["msg"],
+                data: null,
+            });
+        }
+    } catch (err) {
+        return res.status(401).json({
+            status: "failure",
+            message: err.message,
+        });
+    }
+};

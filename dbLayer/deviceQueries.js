@@ -149,7 +149,7 @@ module.exports.checkDeviceOwner = async (deviceId, userId) => {
         response["status"] = -1;
         response["msg"] = err.message;
     }
-    return response
+    return response;
 }
 
 module.exports.updateDevice = async (deviceToken, deviceData) => {
@@ -217,5 +217,39 @@ module.exports.checkDeviceAccess = async (deviceId, userId) => {
         response["status"] = -1;
         response["msg"] = err.message;
     }
-    return response
+    return response;
+}
+
+// delete device with device_id along with its all device access share
+module.exports.deleteDevice = async (deviceId) => {
+    let response = { status: 0, msg: "", data: null };
+    try {
+        const deleteDevice = await Device.findOneAndUpdate(
+            { device_id: deviceId },
+            {
+                $set: {
+                    state: 0,
+                },
+            },
+            { new: true }
+        );
+        if (deleteDevice) {
+            const deleteDeviceAccess = await DeviceAccess.deleteMany({ device_id: deviceId });
+            if (deleteDeviceAccess) {
+                response["status"] = 1;
+                response["msg"] = "Device Deleted";
+                response["data"] = deleteDevice;
+            } else {
+                response["status"] = 0;
+                response["msg"] = "Device Access Not Deleted";
+            }
+        } else {
+            response["status"] = 0;
+            response["msg"] = "Device Not Deleted";
+        }
+    } catch (err) {
+        response["status"] = -1;
+        response["msg"] = err.message;
+    }
+    return response;
 }
