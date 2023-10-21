@@ -196,3 +196,21 @@ module.exports.checkDeviceAccess = async (deviceId, userId) => {
     }
     return response;
 }
+
+module.exports.deleteDevice = async (deviceId) => {
+    let response = { status: 0, msg: "", data: null };
+    try {
+        const deleteDevice = await deviceQueries.deleteDevice(deviceId);
+        if (deleteDevice["status"] === 1) {
+            response["status"] = deleteDevice.status;
+            response["msg"] = deleteDevice.msg;
+            response["data"] = deleteDevice.data;
+        } else {
+            response["status"] = deleteDevice.status;
+            response["msg"] = deleteDevice.msg;
+        }
+    } catch (err) {
+        response["status"] = -1;
+        response["msg"] = err.message;
+    }
+}
