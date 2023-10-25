@@ -224,7 +224,7 @@ module.exports.deleteDevice = async (deviceId) => {
     let response = { status: 0, msg: "", data: null };
     try {
         const deleteDevice = await Device.findOneAndUpdate(
-            { device_id: deviceId },
+            { _id: deviceId },
             {
                 $set: {
                     state: 0,
