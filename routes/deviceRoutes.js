@@ -11,5 +11,7 @@ router.post("/register", userAuth, deviceController.registerDevice);
 router.post("/update", deviceController.updateDevice);
 router.post("/share", userAuth, deviceController.shareDeviceAccess);
 router.post("/delete", userAuth, deviceController.deleteDevice);
+router.get("/deviceusers", userAuth, deviceController.getAccessUsers);
+router.post("/removeaccess", userAuth, deviceController.removeDeviceAccess);
 
 module.exports = router;

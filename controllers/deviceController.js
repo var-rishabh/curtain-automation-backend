@@ -299,3 +299,119 @@ module.exports.deleteDevice = async (req, res) => {
         });
     }
 };
+
+// controller to remove device access
+module.exports.removeDeviceAccess = async (req, res) => {
+    try {
+        const { device_id, country_code, phone_number } = req.body;
+        const getDevice = await deviceServices.findDeviceByDeviceId(device_id);
+        if (getDevice["status"] !== 1) {
+            return res.status(404).json({
+                status: "failure",
+                message: "Device Not Found.",
+                data: null,
+            });
+        }
+
+        const deviceOwner = await deviceServices.checkDeviceOwner(getDevice["data"]["_id"], req.user._id);
+        if (deviceOwner["status"] !== 1) {
+            return res.status(409).json({
+                status: "failure",
+                message: "You Are Not The Device Owner.",
+                data: null,
+            });
+        }
+
+        const user = await userServices.findUserByPhoneNumber(country_code, phone_number);
+        if (user["status"] !== 1) {
+            return res.status(404).json({
+                status: "failure",
+                message: "User Not Found.",
+                data: null,
+            });
+        }
+
+        if (user["data"]["_id"].toString() === req.user._id.toString()) {
+            return res.status(409).json({
+                status: "failure",
+                message: "You Cannot Remove Your Own Access.",
+                data: null,
+            });
+        }
+
+        const checkDeviceAccess = await deviceServices.checkDeviceAccess(getDevice["data"]["_id"], user["data"]["_id"]);4
+        if (checkDeviceAccess["status"] !== 1) {
+            return res.status(409).json({
+                status: "failure",
+                message: "User Does Not Have Access To The Device.",
+                data: null,
+            });
+        }
+
+        const removeDeviceAccess = await deviceServices.removeDeviceAccess(getDevice["data"]["_id"], user["data"]["_id"]);
+        if (removeDeviceAccess["status"] === 1) {
+            return res.status(200).json({
+                status: "success",
+                message: removeDeviceAccess["msg"],
+                data: removeDeviceAccess["data"],
+            });
+        } else {
+            return res.status(409).json({
+                status: "failure",
+                message: removeDeviceAccess["msg"],
+                data: null,
+            });
+        }
+    }
+    catch (err) {
+        return res.status(401).json({
+            status: "failure",
+            message: err.message,
+        });
+    }
+}
+
+// controller to get device access users
+module.exports.getAccessUsers = async (req, res) => {
+    try {
+        const { device_id } = req.body;
+        const getDevice = await deviceServices.findDeviceByDeviceId(device_id);
+        if (getDevice["status"] !== 1) {
+            return res.status(404).json({
+                status: "failure",
+                message: "Device Not Found.",
+                data: null,
+            });
+        }
+
+        const deviceOwner = await deviceServices.checkDeviceOwner(getDevice["data"]["_id"], req.user._id);
+        if (deviceOwner["status"] !== 1) {
+            return res.status(409).json({
+                status: "failure",
+                message: "You Are Not The Device Owner.",
+                data: null,
+            });
+        }
+
+        const getAccessUsers = await deviceServices.getAccessUsers(getDevice["data"]["_id"]);
+        if (getAccessUsers["status"] === 1) {
+            return res.status(200).json({
+                status: "success",
+                message: getAccessUsers["msg"],
+                data: getAccessUsers["data"],
+            });
+        } else {
+            return res.status(409).json({
+                status: "failure",
+                message: getAccessUsers["msg"],
+                data: null,
+            });
+        }
+    }
+    catch (err) {
+        return res.status(401).json({
+            status: "failure",
+            message: err.message,
+        });
+    }
+}
