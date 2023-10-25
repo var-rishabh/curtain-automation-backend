@@ -214,3 +214,41 @@ module.exports.deleteDevice = async (deviceId) => {
         response["msg"] = err.message;
     }
 }
+
+module.exports.removeDeviceAccess = async (deviceId, userId) => {
+    let response = { status: 0, msg: "", data: null };
+    try {
+        const removeDeviceAccess = await deviceQueries.removeDeviceAccess(deviceId, userId);
+        if (removeDeviceAccess["status"] === 1) {
+            response["status"] = removeDeviceAccess.status;
+            response["msg"] = removeDeviceAccess.msg;
+            response["data"] = removeDeviceAccess.data;
+        } else {
+            response["status"] = removeDeviceAccess.status;
+            response["msg"] = removeDeviceAccess.msg;
+        }
+    } catch (err) {
+        response["status"] = -1;
+        response["msg"] = err.message;
+    }
+    return response
+}
+
+module.exports.getAccessUsers = async (deviceId) => {
+    let response = { status: 0, msg: "", data: null };
+    try {
+        const getAccessUsers = await deviceQueries.getAccessUsers(deviceId);
+        if (getAccessUsers["status"] === 1) {
+            response["status"] = getAccessUsers.status;
+            response["msg"] = getAccessUsers.msg;
+            response["data"] = getAccessUsers.data;
+        } else {
+            response["status"] = getAccessUsers.status;
+            response["msg"] = getAccessUsers.msg;
+        }
+    } catch (err) {
+        response["status"] = -1;
+        response["msg"] = err.message;
+    }
+    return response
+}

@@ -220,7 +220,6 @@ module.exports.checkDeviceAccess = async (deviceId, userId) => {
     return response;
 }
 
-// delete device with device_id along with its all device access share
 module.exports.deleteDevice = async (deviceId) => {
     let response = { status: 0, msg: "", data: null };
     try {
@@ -252,4 +251,42 @@ module.exports.deleteDevice = async (deviceId) => {
         response["msg"] = err.message;
     }
     return response;
+}
+
+module.exports.removeDeviceAccess = async (deviceId, userId) => {
+    let response = { status: 0, msg: "", data: null };
+    try {
+        const removeDeviceAccess = await DeviceAccess.deleteOne({ device_id: deviceId, user_id: userId });
+        if (removeDeviceAccess) {
+            response["status"] = 1;
+            response["msg"] = "Device Access Removed";
+            response["data"] = removeDeviceAccess;
+        } else {
+            response["status"] = 0;
+            response["msg"] = "Device Access Not Removed";
+        }
+    } catch (err) {
+        response["status"] = -1;
+        response["msg"] = err.message;
+    }
+    return response
+}
+
+module.exports.getAccessUsers = async (deviceId) => {
+    let response = { status: 0, msg: "", data: null };
+    try {
+        const getAccessUsers = await DeviceAccess.find({ device_id: deviceId, type: 1 }).populate("user_id");
+        if (getAccessUsers) {
+            response["status"] = 1;
+            response["msg"] = "Device Access Users Found";
+            response["data"] = getAccessUsers;
+        } else {
+            response["status"] = 0;
+            response["msg"] = "Device Access Users Not Found";
+        }
+    } catch (err) {
+        response["status"] = -1;
+        response["msg"] = err.message;
+    }
+    return response
 }
