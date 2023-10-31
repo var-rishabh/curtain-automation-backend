@@ -149,7 +149,7 @@ module.exports.checkDeviceOwner = async (deviceId, userId) => {
         response["status"] = -1;
         response["msg"] = err.message;
     }
-    return response;
+    return response
 }
 
 module.exports.updateDevice = async (deviceToken, deviceData) => {
@@ -217,7 +217,7 @@ module.exports.checkDeviceAccess = async (deviceId, userId) => {
         response["status"] = -1;
         response["msg"] = err.message;
     }
-    return response;
+    return response
 }
 
 module.exports.deleteDevice = async (deviceId) => {

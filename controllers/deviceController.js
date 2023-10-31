@@ -339,7 +339,7 @@ module.exports.removeDeviceAccess = async (req, res) => {
             });
         }
 
-        const checkDeviceAccess = await deviceServices.checkDeviceAccess(getDevice["data"]["_id"], user["data"]["_id"]);4
+        const checkDeviceAccess = await deviceServices.checkDeviceAccess(getDevice["data"]["_id"], user["data"]["_id"]);
         if (checkDeviceAccess["status"] !== 1) {
             return res.status(409).json({
                 status: "failure",
@@ -374,7 +374,7 @@ module.exports.removeDeviceAccess = async (req, res) => {
 // controller to get device access users
 module.exports.getAccessUsers = async (req, res) => {
     try {
-        const { device_id } = req.body;
+        const { device_id } = req.query;
         const getDevice = await deviceServices.findDeviceByDeviceId(device_id);
         if (getDevice["status"] !== 1) {
             return res.status(404).json({
