@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const UserSchema = mongoose.Schema(
     {
@@ -33,6 +34,8 @@ const UserSchema = mongoose.Schema(
             enum: [0, 1], // 0 - Admin and 1 - User 
             default: 1,
         },
+        password_reset_otp: String,
+        password_reset_otp_expires_at: Date,
         deleted: {
             type: Boolean,
             default: false,
@@ -50,6 +53,33 @@ UserSchema.pre("save", async function (next) {
     }
     next();
 });
+
+// checking the password is changed before assigning the jwt token or not
+// UserSchema.methods.isPasswordChanged = async function (jwtTimestamp) {
+//     const passwordChangeTime = parseInt(this.updatedAt.getTime() / 1000, 10);
+//     return jwtTimestamp < passwordChangeTime;
+// };
+
+// write a method to save otp in hashed format and its expiry time in the database 
+UserSchema.methods.saveOtp = async function (otp) {
+    const hashedOtp = crypto.createHash("sha256").update(otp.toString()).digest("hex");
+    this.password_reset_otp = hashedOtp;
+    this.password_reset_otp_expires_at = Date.now() + 10 * 60 * 1000;
+    await this.save();
+};
+
+// write a method to check the otp is expired or not
+UserSchema.methods.isOtpExpired = async function (otp) {
+    const otpExpiresAt = Math.floor(this.password_reset_otp_expires_at) ;
+    const currentTime = Date.now();
+    return currentTime > otpExpiresAt;
+};
+
+// write a method to check the otp is valid or not
+UserSchema.methods.isOtpValid = async function (otp) {
+    const hashedOtp = crypto.createHash("sha256").update(otp.toString()).digest("hex");
+    return this.password_reset_otp === hashedOtp;
+};
 
 const User = mongoose.model("User", UserSchema);
 module.exports = User;

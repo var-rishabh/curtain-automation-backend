@@ -213,6 +213,7 @@ module.exports.deleteDevice = async (deviceId) => {
         response["status"] = -1;
         response["msg"] = err.message;
     }
+    return response;
 }
 
 module.exports.removeDeviceAccess = async (deviceId, userId) => {
